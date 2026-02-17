@@ -1,0 +1,220 @@
+/* --- CONFIGURACIÓN GENERAL --- */
+:root {
+    --bg-dark: #050210;
+    --primary: #ff6b81;
+    --secondary: #ff9a9e;
+    --glass: rgba(255, 255, 255, 0.1);
+    --stem-gradient: linear-gradient(to top, #0f3d0f, #2d8a2d);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    height: 100vh;
+    background: radial-gradient(circle at center bottom, #2b102f 0%, #000000 100%);
+    overflow: hidden;
+    font-family: 'Montserrat', sans-serif;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#stars-canvas {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
+}
+
+.hidden { opacity: 0; pointer-events: none; display: none; }
+
+/* --- CAPA DE CORAZONES DE FONDO --- */
+#hearts-container {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+    z-index: 1; pointer-events: none; overflow: hidden;
+}
+
+.falling-heart {
+    position: absolute;
+    top: -10%;
+    opacity: 0.8;
+    filter: drop-shadow(0 0 5px rgba(255, 105, 180, 0.5));
+    animation: fallLinear linear forwards;
+}
+
+/* Animación de caída con balanceo */
+@keyframes fallLinear {
+    0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.8; }
+    50% { transform: translateY(50vh) translateX(20px) rotate(180deg); }
+    100% { transform: translateY(110vh) translateX(-20px) rotate(360deg); opacity: 0; }
+}
+
+/* --- CAPA 1: INTERFAZ Y JUEGO --- */
+#game-layer {
+    position: absolute; width: 100%; height: 100%; z-index: 10;
+}
+
+.floating-text {
+    position: absolute; top: 20%; width: 100%; text-align: center;
+    font-size: 1.5rem; letter-spacing: 2px;
+    animation: pulseText 2s infinite;
+    text-shadow: 0 0 15px rgba(255,255,255,0.6);
+}
+
+@keyframes pulseText { 50% { opacity: 0.5; transform: scale(0.98); } }
+
+.glass-box {
+    position: absolute; top: 35%; left: 50%; transform: translateX(-50%);
+    width: 85%; max-width: 500px; padding: 30px;
+    background: var(--glass);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 25px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+    text-align: center;
+    transition: opacity 0.5s;
+}
+
+#message-text {
+    font-family: 'Sacramento', cursive;
+    font-size: 2.4rem;
+    line-height: 1.3;
+    background: linear-gradient(to right, #fff, #ffc3a0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* MARIPOSA */
+#butterfly-wrapper {
+    position: absolute; top: 60%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 130px; height: 130px;
+    cursor: pointer; z-index: 20;
+}
+
+#butterfly-img {
+    width: 100%; height: auto;
+    filter: drop-shadow(0 0 20px rgba(255, 107, 129, 0.8));
+    animation: fly 3s ease-in-out infinite;
+}
+
+.butterfly-aura {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 120%; height: 120%;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+    animation: auraPulse 2s infinite; z-index: -1;
+}
+
+@keyframes fly {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(6deg); }
+}
+
+@keyframes auraPulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+    50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.6; }
+}
+
+/* --- CAPA 2: JARDÍN --- */
+#garden-layer {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 5; opacity: 0; transition: opacity 2s ease;
+}
+
+#lyrics-container {
+    position: absolute; top: 12%; width: 100%;
+    text-align: center; font-family: 'Dancing Script', cursive;
+    font-size: 2.2rem; color: #fff;
+    text-shadow: 0 0 12px var(--primary);
+    transition: opacity 0.5s;
+    z-index: 100;
+}
+
+.final-message {
+    position: absolute; bottom: 15%; width: 100%;
+    text-align: center; font-family: 'Montserrat', sans-serif;
+    font-size: 1.1rem; color: rgba(255,255,255,0.9);
+    opacity: 0; transition: opacity 2s; z-index: 100;
+}
+.highlight { color: var(--primary); font-weight: bold; }
+
+/* CONTENEDOR DE LA FLOR */
+.flower-container {
+    position: absolute; bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 300px; height: 600px;
+}
+
+/* Tallo Animado */
+.stem-wrapper {
+    position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 12px; height: 400px; z-index: 1;
+}
+
+.stem {
+    width: 100%; height: 0; /* Crece */
+    background: var(--stem-gradient);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,255,0,0.1);
+}
+
+.leaf {
+    position: absolute; width: 50px; height: 90px;
+    background: linear-gradient(to top right, #1a4d1a, #4caf50);
+    border-radius: 0 50px 0 50px;
+    opacity: 0; transform: scale(0);
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+}
+.leaf-left { top: 35%; left: -35px; transform-origin: right bottom; }
+.leaf-right { top: 55%; right: -35px; border-radius: 50px 0 50px 0; transform-origin: left bottom; }
+.leaf-bottom-left { top: 75%; left: -45px; transform-origin: right bottom; width: 60px; height: 100px; }
+.leaf-bottom-right { top: 85%; right: -40px; border-radius: 50px 0 50px 0; transform-origin: left bottom; }
+
+/* Cabeza de la Flor (Imagen) */
+.flower-head-wrapper {
+    position: absolute; bottom: 390px; left: 50%;
+    transform: translateX(-50%) scale(0); /* Invisible al inicio */
+    width: 250px; /* Ajusta según tu imagen */
+    height: 250px; z-index: 2;
+    display: flex; justify-content: center; align-items: center;
+}
+
+.flower-img {
+    width: 100%; height: auto;
+    filter: drop-shadow(0 0 25px rgba(255, 223, 0, 0.5));
+    animation: bloomSway 5s ease-in-out infinite alternate;
+}
+
+.flower-glow {
+    position: absolute; width: 140%; height: 140%;
+    background: radial-gradient(circle, rgba(255,215,0,0.3) 0%, transparent 60%);
+    animation: glowPulse 3s infinite; z-index: -1;
+}
+
+/* Partículas */
+.sparkle {
+    position: absolute; width: 5px; height: 5px;
+    background: white; border-radius: 50%;
+    box-shadow: 0 0 10px #fff; opacity: 0;
+}
+.s1 { top: 10px; left: -20px; }
+.s2 { top: 60px; right: -40px; }
+.s3 { top: -40px; left: 30px; }
+
+/* --- ANIMACIONES DE ESTADO (JS) --- */
+.grow-stem .stem { animation: growUp 3.5s ease-out forwards; }
+.grow-stem .leaf { animation: leafAppear 1s ease-out forwards; }
+.grow-stem .leaf-bottom-left { animation-delay: 0.5s; }
+.grow-stem .leaf-bottom-right { animation-delay: 1.2s; }
+.grow-stem .leaf-right { animation-delay: 2s; }
+.grow-stem .leaf-left { animation-delay: 2.5s; }
+
+.bloom-head .flower-head-wrapper { animation: bloomEffect 3s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
+.bloom-head .sparkle { animation: sparkleFloat 4s infinite; }
+.s1 { animation-delay: 0.2s; } .s2 { animation-delay: 1.5s; } .s3 { animation-delay: 2.8s; }
+
+@keyframes growUp { to { height: 100%; } }
+@keyframes leafAppear { 0% { opacity: 0; transform: scale(0) rotate(15deg); } 100% { opacity: 1; transform: scale(1) rotate(0deg); } }
+@keyframes bloomEffect { 0% { transform: translateX(-50%) scale(0) rotate(-30deg); opacity: 0; } 100% { transform: translateX(-50%) scale(1) rotate(0deg); opacity: 1; } }
+@keyframes bloomSway { 0% { transform: rotate(-3deg); } 100% { transform: rotate(3deg); } }
+@keyframes glowPulse { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.1); } }
+@keyframes sparkleFloat { 0% { opacity: 0; transform: translateY(0); } 50% { opacity: 1; } 100% { opacity: 0; transform: translateY(-60px); } }
